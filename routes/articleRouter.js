@@ -40,7 +40,8 @@ articleRouter.route('/')
     .catch(err => next(err));
 })
 .post(authenticate.verifyUser, authenticate.verifyAdmin, upload.single('imageFile'), (req, res, next) => {
-    console.log(req.body);
+    if(!req.file)
+        req.file = {filename:''};
     req.body.image = '/images/' + req.file.filename;
     Articles.create(req.body)
     .then((article) => {
@@ -62,6 +63,8 @@ articleRouter.route('/:articleId')
     .catch(err => next(err));
 })
 .put(authenticate.verifyUser, authenticate.verifyAdmin, upload.single('imageFile'), (req, res, next) => {
+    if(!req.file)
+        req.file = {filename:''};
     Articles.findById(req.params.articleId)
     .then((article) => {
         fs.unlink('public' + article.image, (err) => {});

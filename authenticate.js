@@ -9,7 +9,7 @@ const config = require('./config.js');
 
 
 exports.getToken = (user) => {
-    return jwt.sign(user, config.secretKey, { expiresIn: 3600 });
+    return jwt.sign(user, config.secretKey, { expiresIn: 3600*3 });
 }
 
 passport.use(new LocalStrategy(User.authenticate()));
