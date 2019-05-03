@@ -63,12 +63,12 @@ articleRouter.route('/:articleId')
     .catch(err => next(err));
 })
 .put(authenticate.verifyUser, authenticate.verifyAdmin, upload.single('imageFile'), (req, res, next) => {
-    if(!req.file)
-        req.file = {filename:''};
     Articles.findById(req.params.articleId)
     .then((article) => {
-        fs.unlink('public' + article.image, (err) => {});
-        req.body.image = '/images/' + req.file.filename;
+        if(req.file){
+            fs.unlink('public' + article.image, (err) => {});
+            req.body.image = '/images/' + req.file.filename;
+        }
         Articles.findByIdAndUpdate(req.params.articleId, { $set: req.body}, {new: true})
         .then((article) => {
             res.statusCode = 200;
